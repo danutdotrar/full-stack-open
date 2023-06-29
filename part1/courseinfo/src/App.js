@@ -1,4 +1,5 @@
 const Header = (prop) => {
+    // console.log(prop);
     return (
         <>
             <h1>{prop.course}</h1>
@@ -7,6 +8,16 @@ const Header = (prop) => {
 };
 
 const Content = (prop) => {
+    return (
+        <>
+            <Part part={prop.parts[0].name} exercise={prop.parts[0].exercise} />
+            <Part part={prop.parts[1].name} exercise={prop.parts[1].exercise} />
+            <Part part={prop.parts[2].name} exercise={prop.parts[2].exercise} />
+        </>
+    );
+};
+
+const Part = (prop) => {
     return (
         <>
             <p>
@@ -19,29 +30,44 @@ const Content = (prop) => {
 const Total = (prop) => {
     return (
         <>
-            <p>Number of exercises {prop.exercise}</p>
+            <p>
+                Number of exercises -{" "}
+                {prop.parts[0].exercise +
+                    prop.parts[1].exercise +
+                    prop.parts[2].exercise}
+            </p>
         </>
     );
 };
 
 const App = () => {
     const course = "Half Stack application development";
-    const part1 = "Fundamentals of React";
-    const exercises1 = 10;
-    const part2 = "Using props to pass data";
-    const exercises2 = 7;
-    const part3 = "State of a component";
-    const exercises3 = 13;
+
+    const parts = [
+        {
+            name: "Fundamentals of React",
+            exercise: 10,
+        },
+        {
+            name: "Using props to pass data",
+            exercise: 7,
+        },
+        {
+            name: "State of a component",
+            exercise: 14,
+        },
+    ];
+
+    // const exercises = parts.map((item) => item.exercise);
+    // const sum = exercises.reduce((acc, val) => acc + val, 0);
 
     return (
         <div>
             <Header course={course} />
 
-            <Content part={part1} exercise={exercises1} />
-            <Content part={part2} exercise={exercises2} />
-            <Content part={part3} exercise={exercises3} />
+            <Content parts={parts} />
 
-            <Total exercise={exercises1 + exercises2 + exercises3} />
+            <Total parts={parts} />
         </div>
     );
 };

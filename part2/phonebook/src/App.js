@@ -1,52 +1,80 @@
 import { useState } from "react";
 
+import Filter from "./Components/filter";
+import { PersonForm, Persons } from "./Components/personform";
+
 const App = () => {
-    const [persons, setPersons] = useState([{ name: "Arto Hellas", id: 1 }]);
+    const [persons, setPersons] = useState([
+        { name: "Arto Hellas", id: 1, number: "0755555555" },
+        { name: "Andrew", id: 2, number: "0751111155" },
+        { name: "George", id: 3, number: "0752352345" },
+    ]);
     const [newName, setNewName] = useState("");
+    const [newNumber, setNewNumber] = useState("");
+    const [newFilter, setNewFilter] = useState("");
 
     const addName = (e) => {
         e.preventDefault();
 
-        const personsObject = {
-            name: newName,
-            id: persons.length + 1,
-        };
+        const existingPerson = persons.find(
+            (person) => person.name === newName
+        );
 
-        setPersons(persons.concat(personsObject));
-        checkIfExists(newName);
+        console.log(existingPerson);
+
+        if (existingPerson) {
+            alert(`${newName} already exists`);
+        } else {
+            const personsObject = {
+                name: newName,
+                number: newNumber,
+                id: persons.length + 1,
+            };
+            setPersons(persons.concat(personsObject));
+        }
+
         setNewName("");
+        setNewNumber("");
     };
 
     const handleInputChange = (e) => {
-        console.log(e.target.value);
         setNewName(e.target.value);
     };
 
-    const checkIfExists = (input) => {
-        persons.filter((person) =>
-            person.name === input ? alert(`${input} already exists`) : ""
-        );
+    const handleNumberChange = (e) => {
+        setNewNumber(e.target.value);
     };
+
+    const handleFilterChange = (e) => {
+        console.log(e.target.value);
+        setNewFilter(e.target.value);
+    };
+    const personsToShow = newFilter
+        ? persons.filter(
+              (person) => person.name.toLowerCase() === newFilter.toLowerCase()
+          )
+        : persons;
 
     return (
         <div>
             <h2>Phonebook</h2>
 
-            <form onSubmit={addName}>
-                <div>
-                    name: <input value={newName} onChange={handleInputChange} />
-                </div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
+            <Filter value={newFilter} onChange={handleFilterChange} />
+
+            <h2>Add new</h2>
+
+            <PersonForm
+                onSubmit={addName}
+                newName={newName}
+                newNumber={newNumber}
+                handleInputChange={handleInputChange}
+                handleNumberChange={handleNumberChange}
+            />
 
             <h2>Numbers</h2>
             <div>
                 <ul>
-                    {persons.map((person) => (
-                        <li key={person.id}>{person.name}</li>
-                    ))}
+                    <Persons showArr={personsToShow} />
                 </ul>
             </div>
         </div>

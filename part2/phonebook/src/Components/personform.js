@@ -33,12 +33,13 @@ const InputType = ({ text, newThing, handleThing }) => {
     );
 };
 
-const Persons = ({ showArr }) => {
-    return showArr.map((person) => (
-        <li key={person.id}>
+const Persons = ({ person, removePerson }) => {
+    return (
+        <li>
             {person.name} {person.number}
+            <button onClick={removePerson}>delete</button>
         </li>
-    ));
+    );
 };
 
 export { PersonForm, Persons };

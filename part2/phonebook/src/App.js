@@ -1,19 +1,29 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import personService from "./services/persons";
 
 import Filter from "./Components/filter";
 import { PersonForm, Persons } from "./Components/personform";
+
+const Notification = ({ message }) => {
+    if (message === null) {
+        return null;
+    }
+
+    return <div className="error">{message}</div>;
+};
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
     const [newFilter, setNewFilter] = useState("");
+    const [newError, setErrorMessage] = useState(null);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:3001/persons")
-            .then((response) => setPersons(response.data));
+        personService.getAll().then((response) => {
+            setPersons(response.data);
+        });
     }, []);
 
     const addName = (e) => {
@@ -23,21 +33,35 @@ const App = () => {
             (person) => person.name === newName
         );
 
-        console.log(existingPerson);
-
         if (existingPerson) {
             alert(`${newName} already exists`);
         } else {
             const personsObject = {
                 name: newName,
                 number: newNumber,
-                id: persons.length + 1,
             };
-            setPersons(persons.concat(personsObject));
-        }
 
-        setNewName("");
-        setNewNumber("");
+            personService.create(personsObject).then((response) => {
+                setPersons(persons.concat(response.data));
+
+                setNewName("");
+
+                setNewNumber("");
+            });
+
+            setErrorMessage(`Added ${personsObject.name}`);
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 2000);
+        }
+    };
+
+    const removePerson = (id) => {
+        const person = persons.filter((person) => person.id !== id);
+        personService
+            .deletePerson(id)
+            .then(() => setPersons(person))
+            .catch((error) => console.log(error));
     };
 
     const handleInputChange = (e) => {
@@ -62,6 +86,8 @@ const App = () => {
         <div>
             <h2>Phonebook</h2>
 
+            <Notification message={newError} />
+
             <Filter value={newFilter} onChange={handleFilterChange} />
 
             <h2>Add new</h2>
@@ -77,7 +103,13 @@ const App = () => {
             <h2>Numbers</h2>
             <div>
                 <ul>
-                    <Persons showArr={personsToShow} />
+                    {personsToShow.map((person) => (
+                        <Persons
+                            key={person.id}
+                            person={person}
+                            removePerson={() => removePerson(person.id)}
+                        />
+                    ))}
                 </ul>
             </div>
         </div>

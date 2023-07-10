@@ -22,13 +22,6 @@ const App = () => {
 
                     // Over 10 countries
                     if (matchingCountries.length > 10) {
-                        // setCountry([
-                        //     {
-                        //         name: {
-                        //             common: "Too many matches, specify another filter",
-                        //         },
-                        //     },
-                        // ]);
                         setCountry(["too many"]);
                     }
 
@@ -99,10 +92,11 @@ const RenderCountry = ({ country }) => {
     if (country.length == 1) {
         return (
             <>
-                <ul>
-                    <li>{country[0].name.common}</li>
-                </ul>
-                <h3>Languages:</h3>
+                <h2>{country[0].name.common}</h2>
+                <p>Capital: {country[0].capital}</p>
+                <p>Area: {country[0].area}</p>
+
+                <h2>Languages:</h2>
                 <ul>
                     {typeof country[0].languages === "object"
                         ? Object.values(country[0].languages).map(
@@ -110,6 +104,12 @@ const RenderCountry = ({ country }) => {
                           )
                         : ""}
                 </ul>
+                <div>
+                    <img
+                        src={country[0].flags.png}
+                        style={{ width: "200px" }}
+                    />
+                </div>
             </>
         );
     }

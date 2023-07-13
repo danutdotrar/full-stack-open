@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import personService from "./services/persons";
 
 import Filter from "./Components/filter";
@@ -14,7 +13,7 @@ const Notification = ({ message }) => {
 };
 
 const App = () => {
-    const [persons, setPersons] = useState([]);
+    const [persons, setPersons] = useState(null);
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
     const [newFilter, setNewFilter] = useState("");
@@ -81,6 +80,10 @@ const App = () => {
               (person) => person.name.toLowerCase() === newFilter.toLowerCase()
           )
         : persons;
+
+    if (!persons) {
+        return null;
+    }
 
     return (
         <div>

@@ -1,14 +1,13 @@
 const express = require("express");
-const cors = require("cors");
 const app = express();
-const mongoose = require("mongoose");
+const cors = require("cors");
 require("dotenv").config();
 
 const Note = require("./models/note");
 
-app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
+app.use(express.static("build"));
 
 let notes = [];
 

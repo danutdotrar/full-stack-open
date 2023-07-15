@@ -1,52 +1,68 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+const Note = require("./models/note");
 
 app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
-// const http = require("http");
 
-let notes = [
-    {
-        id: 1,
-        content: "HTML is easy",
-        important: true,
-    },
-    {
-        id: 2,
-        content: "Browser can execute only JavaScript",
-        important: false,
-    },
-    {
-        id: 3,
-        content: "GET and POST are the most important methods of HTTP protocol",
-        important: true,
-    },
-];
+let notes = [];
 
-// const app = http.createServer((request, response) => {
-//     response.writeHead(200, { "Content-Type": "application/json" });
-//     response.end(JSON.stringify(notes));
-// });
+// Mongo
 
-app.get("/", (request, response) => {
-    response.json(notes);
+if (process.argv.length < 3) {
+    console.log("give password as argument");
+    process.exit(1);
+}
+
+const password = "8ErlvsZd3aMIv2Eq";
+
+const url = `mongodb+srv://fullstackopen:${password}@cluster0.8g4w7fa.mongodb.net/noteApp?retryWrites=true&w=majority`;
+
+// mongoose.set("strictQuery", false);
+// mongoose.connect(url);
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    important: Boolean,
 });
 
+// Format object
+noteSchema.set("toJSON", {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
+    },
+});
+
+// const Note = mongoose.model("Note", noteSchema);
+
+// Fetch
 app.get("/api/notes", (request, response) => {
-    response.json(notes);
+    Note.find({}).then((notes) => {
+        response.json(notes);
+    });
+    // response.json(notes);
 });
 
 app.get("/api/notes/:id", (request, response) => {
-    const id = Number(request.params.id);
-    const note = notes.find((note) => note.id === id);
+    // const id = Number(request.params.id);
+    // const note = notes.find((note) => note.id === id);
 
-    if (note) {
+    // if (note) {
+    //     response.json(note);
+    // } else {
+    //     response.status(404).end();
+    // }
+
+    Note.findById(request.params.id).then((note) => {
         response.json(note);
-    } else {
-        response.status(404).end();
-    }
+    });
 });
 
 app.delete("/api/notes/:id", (request, response) => {
@@ -64,21 +80,20 @@ const generateId = () => {
 app.post("/api/notes", (request, response) => {
     const body = request.body;
 
-    if (!body.content) {
+    if (body.content === undefined) {
         return response.status(400).json({ error: "content missing" });
     }
 
-    const note = {
+    const note = new Note({
         content: body.content,
         important: body.important || false,
-        id: generateId(),
-    };
+    });
 
-    notes = notes.concat(note);
-
-    response.json(note);
+    note.save().then((savedNote) => {
+        response.json(savedNote);
+    });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);

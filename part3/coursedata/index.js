@@ -12,23 +12,9 @@ app.use(express.static("build"));
 let notes = [];
 
 // Mongo
-const password = "8ErlvsZd3aMIv2Eq";
+// const password = "8ErlvsZd3aMIv2Eq";
 
-const url = `mongodb+srv://fullstackopen:${password}@cluster0.8g4w7fa.mongodb.net/noteApp?retryWrites=true&w=majority`;
-
-const noteSchema = new mongoose.Schema({
-    content: String,
-    important: Boolean,
-});
-
-// Format object
-noteSchema.set("toJSON", {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject.__v;
-    },
-});
+// const url = `mongodb+srv://fullstackopen:${password}@cluster0.8g4w7fa.mongodb.net/noteApp?retryWrites=true&w=majority`;
 
 // Fetch
 app.get("/api/notes", (request, response) => {
@@ -50,10 +36,10 @@ app.delete("/api/notes/:id", (request, response) => {
     response.status(204).end();
 });
 
-const generateId = () => {
-    const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-    return maxId + 1;
-};
+// const generateId = () => {
+//     const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+//     return maxId + 1;
+// };
 
 app.post("/api/notes", (request, response) => {
     const body = request.body;

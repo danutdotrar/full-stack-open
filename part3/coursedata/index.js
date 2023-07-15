@@ -13,18 +13,9 @@ app.use(express.json());
 let notes = [];
 
 // Mongo
-
-if (process.argv.length < 3) {
-    console.log("give password as argument");
-    process.exit(1);
-}
-
 const password = "8ErlvsZd3aMIv2Eq";
 
 const url = `mongodb+srv://fullstackopen:${password}@cluster0.8g4w7fa.mongodb.net/noteApp?retryWrites=true&w=majority`;
-
-// mongoose.set("strictQuery", false);
-// mongoose.connect(url);
 
 const noteSchema = new mongoose.Schema({
     content: String,
@@ -40,26 +31,14 @@ noteSchema.set("toJSON", {
     },
 });
 
-// const Note = mongoose.model("Note", noteSchema);
-
 // Fetch
 app.get("/api/notes", (request, response) => {
     Note.find({}).then((notes) => {
         response.json(notes);
     });
-    // response.json(notes);
 });
 
 app.get("/api/notes/:id", (request, response) => {
-    // const id = Number(request.params.id);
-    // const note = notes.find((note) => note.id === id);
-
-    // if (note) {
-    //     response.json(note);
-    // } else {
-    //     response.status(404).end();
-    // }
-
     Note.findById(request.params.id).then((note) => {
         response.json(note);
     });

@@ -5,6 +5,7 @@ mongoose.set("strictQuery", false);
 const url = process.env.MONGODB_URI;
 
 console.log("connecting to", url);
+console.log("type of url is", typeof url);
 
 mongoose
     .connect(url)

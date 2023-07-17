@@ -1,0 +1,32 @@
+{
+    "name": "part3",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build:ui": "rm -rf build && cd ../../part2/coursedata && npm run build && cp -r build ../../part3/coursedata",
+        "deploy": "fly deploy",
+        "deploy:full": "npm run build:ui && npm run deploy",
+        "logs:prod": "fly logs",
+        "lint": "eslint ."
+    },
+    "proxy": "http://localhost:3001",
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "mongoose": "^7.3.4"
+    },
+    "devDependencies": {
+        "@flydotio/dockerfile": "^0.3.3",
+        "eslint": "^8.45.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.27.5",
+        "nodemon": "^3.0.1"
+    }
+}

@@ -68,14 +68,7 @@ let blogs = [
         author: "sdasdasadasd",
         url: "dassddasdas",
         likes: "123",
-        id: 9641,
-    },
-    {
-        title: "asdsdaasddasdsa",
-        author: "dsadsadsadsadas",
-        url: "dasadssdadsadas",
-        likes: "1222222222222",
-        id: 7630,
+        id: 4,
     },
 ];
 
@@ -103,12 +96,42 @@ app.get("/api/blogs/:id", (request, response) => {
     }
 });
 
-// Delete a resourse
+// Delete a resource
 app.delete("/api/blogs/:id", (request, response) => {
     const id = Number(request.params.id);
     blogs = blogs.filter((blog) => blog.id !== id);
 
     response.status(204).end();
+});
+
+const generateId = () => {
+    // Find the max length
+    const maxId = blogs.length > 0 ? Math.max(...blogs.map((n) => n.id)) : 0;
+    return maxId + 1;
+};
+
+// Add a resource
+app.post("/api/blogs", (request, response) => {
+    const body = request.body;
+
+    if (!body.title && !body.author) {
+        response.status(400).json({
+            error: "Title and Author is missing",
+        });
+    }
+
+    const blog = {
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: body.likes,
+        id: generateId(),
+    };
+
+    // Save the data in blogs array
+    blogs = blogs.concat(blog);
+
+    response.json(blog);
 });
 
 // PORT listening

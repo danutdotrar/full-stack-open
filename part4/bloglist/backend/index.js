@@ -32,13 +32,17 @@
 //     });
 // });
 
-// require express
+// Require express
 const express = require("express");
 
-// store express app in a variable
+// Store express app function in a variable
 const app = express();
 
-// access data with json-parser
+// Allow requests from all origins using cors
+const cors = require("cors");
+app.use(cors());
+
+// Access data with json-parser
 app.use(express.json());
 
 let blogs = [
@@ -63,20 +67,9 @@ let blogs = [
         likes: "13",
         id: 3,
     },
-    {
-        title: "asdasdsda",
-        author: "sdasdasadasd",
-        url: "dassddasdas",
-        likes: "123",
-        id: 4,
-    },
 ];
 
-// Create routes
-app.get("/", (request, response) => {
-    response.send("<h1>Hello from back end</h1>");
-});
-
+// Create server routes /api/blogs
 app.get("/api/blogs", (request, response) => {
     response.json(blogs);
 });

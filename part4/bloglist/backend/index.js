@@ -34,8 +34,12 @@
 
 // require express
 const express = require("express");
+
 // store express app in a variable
 const app = express();
+
+// access data with json-parser
+app.use(express.json());
 
 let blogs = [
     {
@@ -84,10 +88,27 @@ app.get("/api/blogs", (request, response) => {
     response.json(blogs);
 });
 
+// Fetch a single resource
 app.get("/api/blogs/:id", (request, response) => {
-    const id = request.params.id;
+    const id = Number(request.params.id);
 
-    request.json();
+    const blog = blogs.find((blog) => {
+        return blog.id === id;
+    });
+
+    if (blog) {
+        response.json(blog);
+    } else {
+        response.status(404).end();
+    }
+});
+
+// Delete a resourse
+app.delete("/api/blogs/:id", (request, response) => {
+    const id = Number(request.params.id);
+    blogs = blogs.filter((blog) => blog.id !== id);
+
+    response.status(204).end();
 });
 
 // PORT listening

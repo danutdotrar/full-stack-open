@@ -45,6 +45,8 @@ app.use(cors());
 // Access data with json-parser
 app.use(express.json());
 
+app.use(express.static("build"));
+
 let blogs = [
     {
         title: "Test 1",

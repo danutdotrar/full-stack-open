@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Use the url made with the backend NodeJS and Express
-const baseURL = "http://localhost:3001/api/blogs";
+const baseURL = "/api/blogs";
 
 const getAll = () => {
     return axios.get(baseURL);

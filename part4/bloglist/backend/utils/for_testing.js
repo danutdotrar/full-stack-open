@@ -25,4 +25,10 @@ const favoriteBlog = (blogs) => {
     return favoriteObject;
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+const mostBlogs = (blogs) => {
+    // input - array of blogs
+    // returns the author with the largest amount of blogs
+    // the return value contains the author name and number of blogs
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };

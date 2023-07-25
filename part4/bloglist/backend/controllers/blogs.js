@@ -44,16 +44,19 @@ blogsRouter.delete("/:id", async (request, response, next) => {
     }
 });
 
-blogsRouter.put("/:id", (request, response, next) => {
-    const body = request.body;
+blogsRouter.put("/:id", async (request, response, next) => {
+    try {
+        const body = request.body;
 
-    const blog = { ...body, likes: body.likes };
+        const blogObj = { ...body, likes: body.likes };
 
-    Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-        .then((updatedBlog) => {
-            response.json(updatedBlog);
-        })
-        .catch((error) => next(error));
+        const blog = await Blog.findByIdAndUpdate(request.params.id, blogObj, {
+            new: true,
+        });
+        response.json(blog);
+    } catch (exception) {
+        next(exception);
+    }
 });
 
 module.exports = blogsRouter;

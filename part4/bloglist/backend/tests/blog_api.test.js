@@ -55,7 +55,6 @@ test("delete a resource", async () => {
     const response = await api.get("/api/blogs");
 
     expect(blogsAtEnd).toHaveLength(response.body.length - 1);
-    console.log(response);
 });
 
 afterAll(async () => {

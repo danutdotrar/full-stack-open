@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
-
+const Blog = require("../models/blog");
 const api = supertest(app);
 
 test("blogs are returned as json", async () => {
@@ -38,6 +38,24 @@ test("add a new blog is working", async () => {
         .send(newBlog)
         .expect(201)
         .expect("Content-Type", /application\/json/);
+});
+
+const blogsInDb = async () => {
+    const blogs = await Blog.find({});
+    return blogs.map((blog) => blog.toJSON());
+};
+
+test("delete a resource", async () => {
+    const blogsAtStart = await blogsInDb();
+    const blogsToDelete = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${blogsToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await blogsInDb();
+    const response = await api.get("/api/blogs");
+
+    expect(blogsAtEnd).toHaveLength(response.body.length - 1);
+    console.log(response);
 });
 
 afterAll(async () => {

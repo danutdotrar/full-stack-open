@@ -17,6 +17,14 @@ test("the returned length is correct", async () => {
     expect(response.body).toHaveLength(3);
 });
 
+test("the unique identifier is named id", async () => {
+    const response = await api.get("/api/blogs");
+
+    const content = response.body.map((r) => r.id);
+
+    expect(content).toBeDefined();
+});
+
 afterAll(async () => {
     await mongoose.connection.close();
 });

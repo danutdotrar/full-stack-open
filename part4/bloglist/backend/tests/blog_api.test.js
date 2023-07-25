@@ -25,6 +25,21 @@ test("the unique identifier is named id", async () => {
     expect(content).toBeDefined();
 });
 
+test("add a new blog is working", async () => {
+    const newBlog = {
+        title: "New Blog Test 123",
+        author: "new blog",
+        url: "urlhurl",
+        likes: "999",
+    };
+
+    await api
+        .post("/api/blogs")
+        .send(newBlog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+});
+
 afterAll(async () => {
     await mongoose.connection.close();
 });

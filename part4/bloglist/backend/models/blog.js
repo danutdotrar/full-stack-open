@@ -6,6 +6,11 @@ const blogSchema = new mongoose.Schema({
     author: String,
     url: String,
     likes: String,
+    // The blog has a reference of the user who created it
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
 });
 
 // Set format schema

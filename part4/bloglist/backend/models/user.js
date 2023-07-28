@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 // Create User Schema
 const userSchema = new mongoose.Schema({
@@ -13,6 +14,8 @@ const userSchema = new mongoose.Schema({
         },
     ],
 });
+
+userSchema.plugin(uniqueValidator);
 
 // Set User Schema
 userSchema.set("toJSON", {

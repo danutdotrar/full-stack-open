@@ -10,7 +10,8 @@
         "build:ui": "rm -rf build && cd ../../part2/coursedata && npm run build && cp -r build ../../part3/coursedata",
         "deploy": "fly deploy",
         "deploy:full": "npm run build:ui && npm run deploy",
-        "logs:prod": "fly logs"
+        "logs:prod": "fly logs",
+        "lint": "eslint ."
     },
     "proxy": "http://localhost:3001",
     "author": "",
@@ -23,6 +24,9 @@
     },
     "devDependencies": {
         "@flydotio/dockerfile": "^0.3.3",
+        "eslint": "^8.45.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.27.5",
         "nodemon": "^3.0.1"
     }
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { FormInput } from "./components/Form";
-import login from "./services/login";
+import Notification from "./components/Notification";
 
 const App = () => {
     const [title, setTitle] = useState("");
@@ -13,10 +13,11 @@ const App = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     // Access the RESTful API created with NodeJS and Express
     useEffect(() => {
-        blogService.getAll().then((response) => setBlogList(response.data));
+        blogService.getAll().then((response) => setBlogList(response));
     }, []);
 
     const handleTitleInput = (e) => {
@@ -47,7 +48,7 @@ const App = () => {
         };
 
         blogService.create(blogObject).then((response) => {
-            setBlogList(blog.concat(response.data));
+            setBlogList(blog.concat(response));
 
             setTitle("");
             setAuthor("");
@@ -65,11 +66,16 @@ const App = () => {
                 password,
             });
 
+            blogService.setToken(user.token);
+
             setUser(user);
             setUsername("");
             setPassword("");
         } catch (exception) {
-            console.log("wrong credentials");
+            setErrorMessage("wrong credentials");
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
         }
     };
 
@@ -121,6 +127,9 @@ const App = () => {
     return (
         <>
             <h1>Bloglist</h1>
+
+            <Notification message={errorMessage} />
+
             <h1>Blog Input Details</h1>
 
             {!user && loginForm()}
@@ -134,6 +143,7 @@ const App = () => {
             <h1>Saved Blogs</h1>
             <div>
                 {blog.map((item) => {
+                    console.log(item);
                     return (
                         <ul key={item.id}>
                             <li>Title: {item.title}</li>

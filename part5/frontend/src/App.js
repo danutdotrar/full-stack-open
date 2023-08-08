@@ -3,7 +3,7 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { FormInput } from "./components/Form";
 import Notification from "./components/Notification";
-
+TODO: REMAKE 5a EXERCISES
 const App = () => {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
